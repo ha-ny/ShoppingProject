@@ -9,22 +9,24 @@
 /* Begin PBXBuildFile section */
 		3F06062D2AAADD1600EF8C02 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F06062C2AAADD1600EF8C02 /* AppDelegate.swift */; };
 		3F06062F2AAADD1600EF8C02 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F06062E2AAADD1600EF8C02 /* SceneDelegate.swift */; };
-		3F0606312AAADD1600EF8C02 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0606302AAADD1600EF8C02 /* ViewController.swift */; };
+		3F0606312AAADD1600EF8C02 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0606302AAADD1600EF8C02 /* SearchViewController.swift */; };
 		3F0606362AAADD1700EF8C02 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F0606352AAADD1700EF8C02 /* Assets.xcassets */; };
 		3F0606392AAADD1700EF8C02 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F0606372AAADD1700EF8C02 /* LaunchScreen.storyboard */; };
 		3F0606432AAADE8600EF8C02 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0606422AAADE8600EF8C02 /* BaseViewController.swift */; };
 		3F0606462AAADF6300EF8C02 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3F0606452AAADF6300EF8C02 /* SnapKit */; };
+		3F0606482AAAE09100EF8C02 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0606472AAAE09100EF8C02 /* TabBarViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		3F0606292AAADD1600EF8C02 /* ShoppingProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShoppingProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F06062C2AAADD1600EF8C02 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3F06062E2AAADD1600EF8C02 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		3F0606302AAADD1600EF8C02 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		3F0606302AAADD1600EF8C02 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		3F0606352AAADD1700EF8C02 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3F0606382AAADD1700EF8C02 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3F06063A2AAADD1700EF8C02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3F0606422AAADE8600EF8C02 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		3F0606472AAAE09100EF8C02 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,11 +62,12 @@
 			children = (
 				3F06062C2AAADD1600EF8C02 /* AppDelegate.swift */,
 				3F06062E2AAADD1600EF8C02 /* SceneDelegate.swift */,
-				3F0606302AAADD1600EF8C02 /* ViewController.swift */,
+				3F0606302AAADD1600EF8C02 /* SearchViewController.swift */,
 				3F0606352AAADD1700EF8C02 /* Assets.xcassets */,
 				3F0606372AAADD1700EF8C02 /* LaunchScreen.storyboard */,
 				3F06063A2AAADD1700EF8C02 /* Info.plist */,
 				3F0606422AAADE8600EF8C02 /* BaseViewController.swift */,
+				3F0606472AAAE09100EF8C02 /* TabBarViewController.swift */,
 			);
 			path = ShoppingProject;
 			sourceTree = "<group>";
@@ -146,8 +149,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				3F0606432AAADE8600EF8C02 /* BaseViewController.swift in Sources */,
-				3F0606312AAADD1600EF8C02 /* ViewController.swift in Sources */,
+				3F0606312AAADD1600EF8C02 /* SearchViewController.swift in Sources */,
 				3F06062D2AAADD1600EF8C02 /* AppDelegate.swift in Sources */,
+				3F0606482AAAE09100EF8C02 /* TabBarViewController.swift in Sources */,
 				3F06062F2AAADD1600EF8C02 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

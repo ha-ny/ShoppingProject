@@ -8,12 +8,12 @@
 import UIKit
 import SnapKit
 
-protocol viewSettingProtocol {
-    func configuration()
-    func addConstraints()
-}
+//protocol viewSettingProtocol {
+//    func configuration()
+//    func addConstraints()
+//}
 
-class BaseViewController: UIViewController, viewSettingProtocol {
+class BaseViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
