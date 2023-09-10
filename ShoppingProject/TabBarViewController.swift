@@ -20,16 +20,6 @@ class TabBarViewController: BaseViewController {
         tabBarDesing()
     }
     
-    override func configuration() {
-        view.addSubview(tabBar.view)
-    }
-    
-    override func addConstraints() {
-        tabBar.view.snp.makeConstraints { make in
-            make.bottom.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-        }
-    }
-    
     func tabBarDesing() {
         let searchView = UINavigationController(rootViewController: SearchViewController())
         searchView.tabBarItem = UITabBarItem(title: "검색", image: UIImage(systemName: "magnifyingglass"), tag: 0)
@@ -38,5 +28,15 @@ class TabBarViewController: BaseViewController {
         likeView.tabBarItem = UITabBarItem(title: "좋아요", image: UIImage(systemName: "heart"), tag: 1)
         
         tabBar.viewControllers = [searchView, likeView]
+    }
+    
+    override func configuration() {
+        view.addSubview(tabBar.view)
+    }
+    
+    override func setConstraints() {
+        tabBar.view.snp.makeConstraints { make in
+            make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
     }
 }

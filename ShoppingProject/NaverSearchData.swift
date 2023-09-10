@@ -1,0 +1,31 @@
+//
+//  NaverSearchData.swift
+//  ShoppingProject
+//
+//  Created by 김하은 on 2023/09/09.
+//
+
+import Foundation
+
+enum SortData: Int {
+    case sim
+    case date
+    case dsc
+    case asc
+}
+
+struct NaverSearchData: Codable {
+    let total, start, display: Int
+    var items: [Item]
+}
+
+struct Item: Codable {
+    let title: String
+    let link: String
+    let image, mallName: String
+    let lprice: String
+
+    enum CodingKeys: String, CodingKey {
+        case title, link, image, lprice, mallName
+    }
+}

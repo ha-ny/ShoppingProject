@@ -8,21 +8,15 @@
 import UIKit
 import SnapKit
 
-//protocol viewSettingProtocol {
-//    func configuration()
-//    func addConstraints()
-//}
-
 class BaseViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
         configuration()
-        addConstraints()
+        setConstraints()
     }
     
     func configuration() { }
-    
-    func addConstraints() { }
+    func setConstraints() { }
 }

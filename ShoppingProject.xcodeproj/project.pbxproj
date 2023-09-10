@@ -15,6 +15,14 @@
 		3F0606432AAADE8600EF8C02 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0606422AAADE8600EF8C02 /* BaseViewController.swift */; };
 		3F0606462AAADF6300EF8C02 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3F0606452AAADF6300EF8C02 /* SnapKit */; };
 		3F0606482AAAE09100EF8C02 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0606472AAAE09100EF8C02 /* TabBarViewController.swift */; };
+		3F06064A2AAAEF8000EF8C02 /* SearchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0606492AAAEF8000EF8C02 /* SearchCollectionViewCell.swift */; };
+		3F06064C2AAAF07C00EF8C02 /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F06064B2AAAF07C00EF8C02 /* BaseCollectionViewCell.swift */; };
+		3F0606502AAAF9CD00EF8C02 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 3F06064F2AAAF9CD00EF8C02 /* .gitignore */; };
+		3F0606542AAAFA1C00EF8C02 /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0606532AAAFA1C00EF8C02 /* APIKey.swift */; };
+		3F0606572AAC07C800EF8C02 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 3F0606562AAC07C800EF8C02 /* Alamofire */; };
+		3F06065A2AAC07D400EF8C02 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 3F0606592AAC07D400EF8C02 /* Kingfisher */; };
+		3F06065D2AAC0DF200EF8C02 /* NaverSearchData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F06065C2AAC0DF200EF8C02 /* NaverSearchData.swift */; };
+		3F06065F2AAC236300EF8C02 /* Function.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F06065E2AAC236300EF8C02 /* Function.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +35,12 @@
 		3F06063A2AAADD1700EF8C02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3F0606422AAADE8600EF8C02 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		3F0606472AAAE09100EF8C02 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		3F0606492AAAEF8000EF8C02 /* SearchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCollectionViewCell.swift; sourceTree = "<group>"; };
+		3F06064B2AAAF07C00EF8C02 /* BaseCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewCell.swift; sourceTree = "<group>"; };
+		3F06064F2AAAF9CD00EF8C02 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		3F0606532AAAFA1C00EF8C02 /* APIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKey.swift; sourceTree = "<group>"; };
+		3F06065C2AAC0DF200EF8C02 /* NaverSearchData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverSearchData.swift; sourceTree = "<group>"; };
+		3F06065E2AAC236300EF8C02 /* Function.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Function.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,7 +48,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F06065A2AAC07D400EF8C02 /* Kingfisher in Frameworks */,
 				3F0606462AAADF6300EF8C02 /* SnapKit in Frameworks */,
+				3F0606572AAC07C800EF8C02 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,16 +76,46 @@
 		3F06062B2AAADD1600EF8C02 /* ShoppingProject */ = {
 			isa = PBXGroup;
 			children = (
+				3F06065B2AAC07EF00EF8C02 /* API */,
+				3F06064D2AAAF0B800EF8C02 /* BaseView */,
+				3F06064E2AAAF0D900EF8C02 /* SearchView */,
+				3F0606472AAAE09100EF8C02 /* TabBarViewController.swift */,
 				3F06062C2AAADD1600EF8C02 /* AppDelegate.swift */,
 				3F06062E2AAADD1600EF8C02 /* SceneDelegate.swift */,
-				3F0606302AAADD1600EF8C02 /* SearchViewController.swift */,
 				3F0606352AAADD1700EF8C02 /* Assets.xcassets */,
 				3F0606372AAADD1700EF8C02 /* LaunchScreen.storyboard */,
 				3F06063A2AAADD1700EF8C02 /* Info.plist */,
-				3F0606422AAADE8600EF8C02 /* BaseViewController.swift */,
-				3F0606472AAAE09100EF8C02 /* TabBarViewController.swift */,
+				3F06065C2AAC0DF200EF8C02 /* NaverSearchData.swift */,
+				3F06065E2AAC236300EF8C02 /* Function.swift */,
 			);
 			path = ShoppingProject;
+			sourceTree = "<group>";
+		};
+		3F06064D2AAAF0B800EF8C02 /* BaseView */ = {
+			isa = PBXGroup;
+			children = (
+				3F0606422AAADE8600EF8C02 /* BaseViewController.swift */,
+				3F06064B2AAAF07C00EF8C02 /* BaseCollectionViewCell.swift */,
+			);
+			path = BaseView;
+			sourceTree = "<group>";
+		};
+		3F06064E2AAAF0D900EF8C02 /* SearchView */ = {
+			isa = PBXGroup;
+			children = (
+				3F0606492AAAEF8000EF8C02 /* SearchCollectionViewCell.swift */,
+				3F0606302AAADD1600EF8C02 /* SearchViewController.swift */,
+			);
+			path = SearchView;
+			sourceTree = "<group>";
+		};
+		3F06065B2AAC07EF00EF8C02 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				3F0606532AAAFA1C00EF8C02 /* APIKey.swift */,
+				3F06064F2AAAF9CD00EF8C02 /* .gitignore */,
+			);
+			path = API;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -90,6 +136,8 @@
 			name = ShoppingProject;
 			packageProductDependencies = (
 				3F0606452AAADF6300EF8C02 /* SnapKit */,
+				3F0606562AAC07C800EF8C02 /* Alamofire */,
+				3F0606592AAC07D400EF8C02 /* Kingfisher */,
 			);
 			productName = ShoppingProject;
 			productReference = 3F0606292AAADD1600EF8C02 /* ShoppingProject.app */;
@@ -121,6 +169,8 @@
 			mainGroup = 3F0606202AAADD1600EF8C02;
 			packageReferences = (
 				3F0606442AAADF6300EF8C02 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				3F0606552AAC07C800EF8C02 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				3F0606582AAC07D400EF8C02 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 3F06062A2AAADD1600EF8C02 /* Products */;
 			projectDirPath = "";
@@ -137,6 +187,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3F0606392AAADD1700EF8C02 /* LaunchScreen.storyboard in Resources */,
+				3F0606502AAAF9CD00EF8C02 /* .gitignore in Resources */,
 				3F0606362AAADD1700EF8C02 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -149,10 +200,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				3F0606432AAADE8600EF8C02 /* BaseViewController.swift in Sources */,
+				3F06064C2AAAF07C00EF8C02 /* BaseCollectionViewCell.swift in Sources */,
+				3F0606542AAAFA1C00EF8C02 /* APIKey.swift in Sources */,
 				3F0606312AAADD1600EF8C02 /* SearchViewController.swift in Sources */,
+				3F06064A2AAAEF8000EF8C02 /* SearchCollectionViewCell.swift in Sources */,
 				3F06062D2AAADD1600EF8C02 /* AppDelegate.swift in Sources */,
 				3F0606482AAAE09100EF8C02 /* TabBarViewController.swift in Sources */,
+				3F06065D2AAC0DF200EF8C02 /* NaverSearchData.swift in Sources */,
 				3F06062F2AAADD1600EF8C02 /* SceneDelegate.swift in Sources */,
+				3F06065F2AAC236300EF8C02 /* Function.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,7 +276,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -274,7 +330,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -378,6 +434,22 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		3F0606552AAC07C800EF8C02 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		3F0606582AAC07D400EF8C02 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -385,6 +457,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3F0606442AAADF6300EF8C02 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		3F0606562AAC07C800EF8C02 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F0606552AAC07C800EF8C02 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		3F0606592AAC07D400EF8C02 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F0606582AAC07D400EF8C02 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
