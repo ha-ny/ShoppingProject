@@ -9,6 +9,8 @@ import UIKit
 
 class SearchCollectionViewCell: BaseCollectionViewCell {
     
+    var data: [Item]?
+    
     let imageView = {
         let view = UIImageView()
         view.layer.cornerRadius = 8
@@ -79,6 +81,32 @@ class SearchCollectionViewCell: BaseCollectionViewCell {
         priceLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom)
             make.leading.trailing.equalTo(titleLabel)
+        }
+    }
+    
+    func cellSetting() {
+        
+        guard let data = data else { return }
+        
+        imageView.kf.setImage(with: URL(string: data[0].image))
+        mallNameLabel.text = "[\(data[0].mallName)]"
+        titleLabel.text = data[0].title
+        priceLabel.text = numberFormatter(number: Int(data[0].lprice)!)
+
+        if isLike(data: data) {
+            likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+        } else{
+            likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+        }
+    }
+    
+    override func prepareForReuse() {
+        guard let data = data else { return }
+        print(data)
+        if isLike(data: data) {
+            likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+        } else{
+            likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
         }
     }
 }

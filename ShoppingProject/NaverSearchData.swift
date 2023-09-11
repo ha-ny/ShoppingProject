@@ -20,12 +20,12 @@ struct NaverSearchData: Codable {
 }
 
 struct Item: Codable {
-    let title: String
+    let productId, title: String
     let link: String
     let image, mallName: String
     let lprice: String
 
     enum CodingKeys: String, CodingKey {
-        case title, link, image, lprice, mallName
+        case productId, title, link, image, lprice, mallName
     }
 }

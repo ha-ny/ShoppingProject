@@ -24,7 +24,7 @@ class TabBarViewController: BaseViewController {
         let searchView = UINavigationController(rootViewController: SearchViewController())
         searchView.tabBarItem = UITabBarItem(title: "검색", image: UIImage(systemName: "magnifyingglass"), tag: 0)
         
-        let likeView = UINavigationController(rootViewController: SearchViewController())
+        let likeView = UINavigationController(rootViewController: LikeViewController())
         likeView.tabBarItem = UITabBarItem(title: "좋아요", image: UIImage(systemName: "heart"), tag: 1)
         
         tabBar.viewControllers = [searchView, likeView]

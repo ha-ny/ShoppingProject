@@ -7,10 +7,10 @@
 
 import UIKit
 import Alamofire
-import Kingfisher
+import RealmSwift
 
 class SearchViewController: BaseViewController {
-    
+
     var searchDataList: NaverSearchData = NaverSearchData(total: 0, start: 0, display: 0, items: [])
     var sort: SortData = .sim
     let display = 30
@@ -20,7 +20,6 @@ class SearchViewController: BaseViewController {
         let view = UISearchBar()
         view.placeholder = "검색어를 입력해주세요"
         view.setValue("취소", forKey: "cancelButtonText")
-        view.showsCancelButton = true
         view.tintColor = .white
         view.delegate = self
         return view
@@ -115,6 +114,7 @@ class SearchViewController: BaseViewController {
     }
     
     @objc func searchButtonTapped() {
+        searchBar.showsCancelButton = false
         view.endEditing(true)
         
         startItem = 1
@@ -260,35 +260,27 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SearchCollectionViewCell", for: indexPath) as? SearchCollectionViewCell else {
             return UICollectionViewCell()
         }
-        
-        let data = searchDataList.items[indexPath.row]
-        
-        cell.imageView.kf.setImage(with: URL(string: data.image))
-        cell.mallNameLabel.text = "[\(data.mallName)]"
-        cell.titleLabel.text = data.title
-        cell.priceLabel.text = numberFormatter(number: Int(data.lprice)!)
-        
+        cell.data = [searchDataList.items[indexPath.item]]
+        cell.cellSetting()
+        cell.likeButton.tag = indexPath.item
+        cell.likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
         return cell
     }
     
-    func numberFormatter(number: Int) -> String {
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .decimal
-        
-        return numberFormatter.string(from: NSNumber(value: number))!
+    @objc func likeButtonTapped(sender: UIButton) {
+
+        if isLike(data: [searchDataList.items[sender.tag]], tableEdit: true) {
+            sender.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+        } else{
+            sender.setImage(UIImage(systemName: "heart"), for: .normal)
+        }
     }
 }
 
 extension SearchViewController: UICollectionViewDataSourcePrefetching {
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
-            
-            print("아이템 총 개수: \(searchDataList.total)")
-            guard searchDataList.total <= startItem + display else {
-                print("아이템 끝? \(startItem + display)")
-                return
-            }
-            
+
             if searchDataList.items.count - 5 == indexPath.row {
                 startItem += display
                 
@@ -306,7 +298,12 @@ extension SearchViewController: UICollectionViewDataSourcePrefetching {
 extension SearchViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = nil
+        searchBar.showsCancelButton = false
         view.endEditing(true)
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = true
     }
 }
 
