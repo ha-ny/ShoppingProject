@@ -16,6 +16,7 @@ class LikeTable: Object {
     @Persisted var mallName: String
     @Persisted var title: String
     @Persisted var price: String
+    @Persisted var createDate: Date
 
     convenience init(productId: String, imageURL: String, mallName: String, title: String, price: String) {
         self.init()

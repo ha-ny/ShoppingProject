@@ -6,10 +6,13 @@
 //
 
 import UIKit
+import RealmSwift
 
-class SearchCollectionViewCell: BaseCollectionViewCell {
+class CollectionViewCell: BaseCollectionViewCell {
     
-    var data: [Item]?
+    let repository = RealmRepository()
+    var itemData: Item?
+    var tableData: LikeTable?
     
     let imageView = {
         let view = UIImageView()
@@ -84,26 +87,45 @@ class SearchCollectionViewCell: BaseCollectionViewCell {
         }
     }
     
-    func cellSetting() {
+    func cellSetting(isLikeView: Bool = false) {
         
-        guard let data = data else { return }
-        
-        imageView.kf.setImage(with: URL(string: data[0].image))
-        mallNameLabel.text = "[\(data[0].mallName)]"
-        titleLabel.text = data[0].title
-        priceLabel.text = numberFormatter(number: Int(data[0].lprice)!)
-
-        if isLike(data: data) {
+        if isLikeView {
+            guard let data = tableData else { return }
+            
+            imageView.kf.setImage(with: URL(string: data.imageURL))
+            mallNameLabel.text = "[\(data.mallName)]"
+            let title = data.title.replacingOccurrences(of: "[<b></b>]", with: "", options: .regularExpression)
+            titleLabel.text = title
+            priceLabel.text = numberFormatter(number: Int(data.price)!)
             likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-        } else{
-            likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+        }else {
+            guard let data = itemData else { return }
+            
+            imageView.kf.setImage(with: URL(string: data.image))
+            mallNameLabel.text = "[\(data.mallName)]"
+            let title = data.title.replacingOccurrences(of: "[<b></b>]", with: "", options: .regularExpression)
+            titleLabel.text = title
+            priceLabel.text = numberFormatter(number: Int(data.lprice)!)
+            
+            if repository.isLikeState(data: data) {
+                likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+            } else{
+                likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+            }
         }
     }
     
+    func numberFormatter(number: Int) -> String {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+    
+        return numberFormatter.string(from: NSNumber(value: number))!
+    }
+    
     override func prepareForReuse() {
-        guard let data = data else { return }
+        guard let data = itemData else { return }
         print(data)
-        if isLike(data: data) {
+        if repository.isLikeState(data: data) {
             likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
         } else{
             likeButton.setImage(UIImage(systemName: "heart"), for: .normal)

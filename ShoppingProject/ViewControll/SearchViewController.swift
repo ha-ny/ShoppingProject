@@ -8,12 +8,15 @@
 import UIKit
 import Alamofire
 import RealmSwift
+import RealmSwift
 
 class SearchViewController: BaseViewController {
 
+    let repository = RealmRepository()
+    let naverAPIManager = NaverAPIManager.shared
     var searchDataList: NaverSearchData = NaverSearchData(total: 0, start: 0, display: 0, items: [])
-    var sort: SortData = .sim
-    let display = 30
+    
+    var sort: SortType = .sim
     var startItem = 1
     
     lazy var searchBar = {
@@ -34,7 +37,7 @@ class SearchViewController: BaseViewController {
         view.setTitleColor(.black, for: .normal)
         view.backgroundColor = .white
         view.titleLabel?.font = .systemFont(ofSize: 14)
-        view.tag = SortData.sim.rawValue
+        view.tag = SortType.sim.rawValue
         return view
     }()
     
@@ -46,7 +49,7 @@ class SearchViewController: BaseViewController {
         view.layer.borderColor = UIColor.gray.cgColor
         view.titleLabel?.font = .systemFont(ofSize: 14)
         view.setTitleColor(.gray, for: .normal)
-        view.tag = SortData.date.rawValue
+        view.tag = SortType.date.rawValue
         return view
     }()
     
@@ -58,7 +61,7 @@ class SearchViewController: BaseViewController {
         view.layer.borderColor = UIColor.gray.cgColor
         view.titleLabel?.font = .systemFont(ofSize: 14)
         view.setTitleColor(.gray, for: .normal)
-        view.tag = SortData.dsc.rawValue
+        view.tag = SortType.dsc.rawValue
         return view
     }()
     
@@ -70,7 +73,7 @@ class SearchViewController: BaseViewController {
         view.layer.borderColor = UIColor.gray.cgColor
         view.titleLabel?.font = .systemFont(ofSize: 14)
         view.setTitleColor(.gray, for: .normal)
-        view.tag = SortData.asc.rawValue
+        view.tag = SortType.asc.rawValue
         return view
     }()
     
@@ -86,7 +89,7 @@ class SearchViewController: BaseViewController {
     
     lazy var collectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
-        view.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: "SearchCollectionViewCell")
+        view.register(CollectionViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
         view.collectionViewLayout = collectionViewLayout()
         view.delegate = self
         view.dataSource = self
@@ -113,13 +116,18 @@ class SearchViewController: BaseViewController {
         byLowPriceButton.addTarget(self, action: #selector(sortChange), for: .touchUpInside)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        collectionView.reloadData()
+    }
+    
     @objc func searchButtonTapped() {
         searchBar.showsCancelButton = false
         view.endEditing(true)
         
         startItem = 1
         scrollToTop()
-        requestAPI { value in
+        
+        naverAPIManager.requestAPI(text: searchBar.text, start: startItem, sort: sort) { value in
             guard let value else { return }
             self.searchDataList.items.removeAll()
             self.searchDataList.items += value.items
@@ -144,7 +152,7 @@ class SearchViewController: BaseViewController {
         }
         
         //버튼 색상 변경(이번에 클릭한 것)
-        switch SortData(rawValue: sender.tag) {
+        switch SortType(rawValue: sender.tag) {
         case .sim: sort = .sim; buttonColorChange(button: byAccuracyButton, click: true)
         case .date: sort = .date; buttonColorChange(button: byDateButton, click: true)
         case .dsc: sort = .dsc; buttonColorChange(button: byHighPriceButton, click: true)
@@ -214,41 +222,6 @@ class SearchViewController: BaseViewController {
         }
     }
 }
-//API
-extension SearchViewController {
-
-//    func requestAPI() {
-//           let text = searchBar.text?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-//           let url = "https://openapi.naver.com/v1/search/shop.json?query=\(text)&start=\(page)&display=30&sort=\(sort)"
-//           print(url)
-//           AF.request(url, headers: ["X-Naver-Client-Id": APIKey.NaverClientID, "X-Naver-Client-Secret": APIKey.NaverClientSecret]).validate().responseDecodable(of: NaverSearchData.self) { response in
-//               switch response.result{
-//               case .success(let value):
-//                   self.searchDataList.items += value.items
-//                   self.collectionView.reloadData()
-//               case .failure(let error):
-//                   print(error)
-//               }
-//           }
-//       }
-        
-    func requestAPI(completion: @escaping (NaverSearchData?) -> ()) {
-        guard let text = searchBar.text?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return }
-        
-        let url = "https://openapi.naver.com/v1/search/shop.json?query=\(text)&start=\(startItem)&display=\(display)&sort=\(sort)"
-        print(url)
-        
-        AF.request(url, headers: ["X-Naver-Client-Id": APIKey.NaverClientID, "X-Naver-Client-Secret": APIKey.NaverClientSecret]).validate().responseDecodable(of: NaverSearchData.self) { response in
-            switch response.result{
-            case .success(let value):
-                completion(value)
-            case .failure(let error):
-                print(error)
-                completion(nil)
-            }
-        }
-    }
-}
 
 extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -257,19 +230,25 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SearchCollectionViewCell", for: indexPath) as? SearchCollectionViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath) as? CollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.data = [searchDataList.items[indexPath.item]]
+        cell.itemData = searchDataList.items[indexPath.item]
         cell.cellSetting()
         cell.likeButton.tag = indexPath.item
         cell.likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
         return cell
     }
     
-    @objc func likeButtonTapped(sender: UIButton) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let vc = WebViewController()
+        vc.itemData = searchDataList.items[indexPath.item]
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func likeButtonTapped(sender: UIButton) {
 
-        if isLike(data: [searchDataList.items[sender.tag]], tableEdit: true) {
+        if repository.isLikeState(data: searchDataList.items[sender.tag], tableEdit: true) {
             sender.setImage(UIImage(systemName: "heart.fill"), for: .normal)
         } else{
             sender.setImage(UIImage(systemName: "heart"), for: .normal)
@@ -282,9 +261,9 @@ extension SearchViewController: UICollectionViewDataSourcePrefetching {
         for indexPath in indexPaths {
 
             if searchDataList.items.count - 5 == indexPath.row {
-                startItem += display
+                startItem += 30
                 
-                requestAPI { value in
+                naverAPIManager.requestAPI(text: searchBar.text, start: startItem, sort: sort) { value in
                     guard let value else { return }
                     self.searchDataList.items += value.items
                     self.collectionView.reloadData()

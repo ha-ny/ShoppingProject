@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum SortData: Int {
+enum SortType: Int {
     case sim
     case date
     case dsc

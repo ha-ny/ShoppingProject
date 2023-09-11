@@ -10,8 +10,8 @@ import RealmSwift
 
 class LikeViewController: BaseViewController {
 
-    let realm = try! Realm()
-    var tasks: Results<LikeTable>!
+    let repository = RealmRepository()
+    var tasks: Results<LikeTable>?
     
     lazy var searchBar = {
         let view = UISearchBar()
@@ -24,7 +24,7 @@ class LikeViewController: BaseViewController {
 
     lazy var collectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
-        view.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: "SearchCollectionViewCell")
+        view.register(CollectionViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
         view.collectionViewLayout = collectionViewLayout()
         view.delegate = self
         view.dataSource = self
@@ -43,7 +43,11 @@ class LikeViewController: BaseViewController {
         self.navigationController?.navigationBar.topItem?.title = "좋아요 목록"
         searchBar.searchTextField.addTarget(self, action: #selector(searchButtonTapped), for: .editingDidEndOnExit)
         
-        tasks = realm.objects(LikeTable.self)
+        tasks = repository.searchLikeTable()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        collectionView.reloadData()
     }
     
     @objc func searchButtonTapped() {
@@ -76,22 +80,54 @@ class LikeViewController: BaseViewController {
 
 extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let tasks = tasks else { return 0 }
         return tasks.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SearchCollectionViewCell", for: indexPath) as? SearchCollectionViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath) as? CollectionViewCell else {
             return UICollectionViewCell()
         }
 
-        let data = tasks[indexPath.item]
+        guard let tasks = tasks else { return UICollectionViewCell() }
         
-        cell.imageView.kf.setImage(with: URL(string: data.imageURL))
-        cell.mallNameLabel.text = data.mallName
-        cell.titleLabel.text = data.title
-        cell.priceLabel.text = numberFormatter(number: Int(data.price)!)
-        
+        cell.tableData = tasks[indexPath.item]
+        cell.cellSetting(isLikeView: true)
+        cell.likeButton.tag = indexPath.item
+        cell.likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        guard let tasks = tasks else { return }
+        
+        let vc = WebViewController()
+        vc.tableData = tasks[indexPath.item]
+        vc.heartBool = true
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func likeButtonTapped(sender: UIButton) {
+
+        do {
+            guard let tasks = tasks else { return }
+            
+            guard let isProductId = repository.isProductId(productId: tasks[sender.tag].productId) else { return }
+            
+            if isProductId.count > 0 {
+                repository.likeTableDelete(data: isProductId)
+                collectionView.reloadData()
+                return
+            }else {
+                print("error 삭제할 데이터 없음")
+            }
+        }catch {
+            print(error)
+        }
+        
+
+        sender.setImage(UIImage(systemName: "heart"), for: .normal)
     }
     
     func numberFormatter(number: Int) -> String {
@@ -103,6 +139,12 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 }
 
 extension LikeViewController: UISearchBarDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        tasks = repository.isItemTitle(title: searchText)
+        collectionView.reloadData()
+    }
+    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = nil
         searchBar.showsCancelButton = false
