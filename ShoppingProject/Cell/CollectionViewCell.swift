@@ -1,14 +1,15 @@
 //
-//  SearchCollectionViewCell.swift
+//  CollectionViewCell.swift
 //  ShoppingProject
 //
 //  Created by 김하은 on 2023/09/08.
 //
 
 import UIKit
-import RealmSwift
+import SnapKit
+import Kingfisher
 
-class CollectionViewCell: BaseCollectionViewCell {
+class CollectionViewCell: UICollectionViewCell {
     
     let repository = RealmRepository()
     var itemData: Item?
@@ -50,7 +51,12 @@ class CollectionViewCell: BaseCollectionViewCell {
         return view
     }()
     
-    override func configuration() {
+    func cellSetting() {
+        configuration()
+        setConstraints()
+    }
+    
+    func configuration() {
         contentView.addSubview(imageView)
         contentView.addSubview(likeButton)
         contentView.addSubview(mallNameLabel)
@@ -58,7 +64,7 @@ class CollectionViewCell: BaseCollectionViewCell {
         contentView.addSubview(priceLabel)
     }
     
-    override func setConstraints() {
+    func setConstraints() {
         imageView.snp.makeConstraints { make in
             make.top.equalTo(contentView.snp.top)
             make.width.equalTo(contentView)

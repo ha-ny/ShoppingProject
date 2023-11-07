@@ -7,13 +7,6 @@
 
 import Foundation
 
-enum SortType: Int {
-    case sim
-    case date
-    case dsc
-    case asc
-}
-
 struct NaverSearchData: Codable {
     let total, start, display: Int
     var items: [Item]

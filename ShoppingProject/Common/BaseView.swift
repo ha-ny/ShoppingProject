@@ -1,5 +1,5 @@
 //
-//  BaseCollectionViewCell.swift
+//  BaseView.swift
 //  ShoppingProject
 //
 //  Created by 김하은 on 2023/09/08.
@@ -8,10 +8,11 @@
 import UIKit
 import SnapKit
 
-class BaseCollectionViewCell: UICollectionViewCell {
+class BaseView: UIView {
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configuration()
+        setConfiguration()
         setConstraints()
     }
     
@@ -19,6 +20,6 @@ class BaseCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configuration() { }
+    func setConfiguration() { }
     func setConstraints() { }
 }

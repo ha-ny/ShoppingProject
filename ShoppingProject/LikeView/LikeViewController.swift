@@ -8,73 +8,42 @@
 import UIKit
 import RealmSwift
 
-class LikeViewController: BaseViewController {
+class LikeViewController: UIViewController {
 
+    let mainView = LikeView()
     let repository = RealmRepository()
     var tasks: Results<LikeTable>?
     
-    lazy var searchBar = {
-        let view = UISearchBar()
-        view.placeholder = "검색어를 입력해주세요"
-        view.setValue("취소", forKey: "cancelButtonText")
-        view.tintColor = .white
-        view.delegate = self
-        return view
-    }()
-
-    lazy var collectionView = {
-        let view = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
-        view.register(CollectionViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
-        view.collectionViewLayout = collectionViewLayout()
-        view.delegate = self
-        view.dataSource = self
-        return view
-    }()
-    
-    func collectionViewLayout() -> UICollectionViewFlowLayout{
-        let layout = UICollectionViewFlowLayout()
-        let size = UIScreen.main.bounds.width - 35
-        layout.itemSize = CGSize(width: size/2 , height: size/1.3)
-        return layout
+    override func loadView() {
+        self.view = mainView
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.topItem?.title = "좋아요 목록"
-        searchBar.searchTextField.addTarget(self, action: #selector(searchButtonTapped), for: .editingDidEndOnExit)
+        
+        mainView.searchBar.delegate = self
+        mainView.collectionView.delegate = self
+        mainView.collectionView.dataSource = self
+        
+        
+        mainView.searchBar.searchTextField.addTarget(self, action: #selector(searchButtonTapped), for: .editingDidEndOnExit)
         
         tasks = repository.searchLikeTable()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        collectionView.reloadData()
+        mainView.collectionView.reloadData()
     }
     
     @objc func searchButtonTapped() {
-        searchBar.showsCancelButton = false
+        mainView.searchBar.showsCancelButton = false
         view.endEditing(true)
         scrollToTop()
     }
     
     func scrollToTop() {
-        collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-    }
-    
-    override func configuration() {
-        view.addSubview(searchBar)
-        view.addSubview(collectionView)
-    }
-    
-    override func setConstraints() {
-        searchBar.snp.makeConstraints { make in
-            make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-        }
-
-        collectionView.snp.makeConstraints { make in
-            make.leading.trailing.equalTo(searchBar).inset(8)
-            make.top.equalTo(searchBar.snp.bottom).offset(10)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
-        }
+        mainView.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
     }
 }
 
@@ -117,7 +86,7 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             
             if isProductId.count > 0 {
                 repository.likeTableDelete(data: isProductId)
-                collectionView.reloadData()
+                mainView.collectionView.reloadData()
                 return
             }else {
                 print("error 삭제할 데이터 없음")
@@ -142,7 +111,7 @@ extension LikeViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         tasks = repository.isItemTitle(title: searchText)
-        collectionView.reloadData()
+        mainView.collectionView.reloadData()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {

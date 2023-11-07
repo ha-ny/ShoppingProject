@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TabBarViewController: BaseViewController {
+class TabBarViewController: UIViewController {
 
     let tabBar = {
         let view = UITabBarController()
@@ -18,6 +18,8 @@ class TabBarViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tabBarDesing()
+        configuration()
+        setConstraints()
     }
     
     func tabBarDesing() {
@@ -30,11 +32,11 @@ class TabBarViewController: BaseViewController {
         tabBar.viewControllers = [searchView, likeView]
     }
     
-    override func configuration() {
+    func configuration() {
         view.addSubview(tabBar.view)
     }
     
-    override func setConstraints() {
+    func setConstraints() {
         tabBar.view.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }

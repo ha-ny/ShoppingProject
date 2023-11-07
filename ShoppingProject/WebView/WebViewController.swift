@@ -9,7 +9,7 @@ import UIKit
 import WebKit
 import RealmSwift
 
-class WebViewController: BaseViewController, WKUIDelegate,WKNavigationDelegate {
+class WebViewController: UIViewController{
 
     let repository = RealmRepository()
     
@@ -54,13 +54,16 @@ class WebViewController: BaseViewController, WKUIDelegate,WKNavigationDelegate {
             let request = URLRequest(url: url!)
             webView.load(request)
         }
+        
+        setConfiguration()
+        setConstraints()
     }
 
-    override func configuration() {
+    func setConfiguration() {
         view.addSubview(webView)
     }
     
-    override func setConstraints() {
+    func setConstraints() {
         webView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
