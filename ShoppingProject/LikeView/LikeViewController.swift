@@ -11,8 +11,12 @@ class LikeViewController: UIViewController {
 
     let mainView = LikeView()
     let realmRepository = RealmRepository()
-    var data: [LikeTable]?
-    
+    var data: [LikeTable]? {
+        didSet {
+            mainView.collectionView.reloadData()
+        }
+    }
+
     override func loadView() {
         self.view = mainView
     }
@@ -25,14 +29,12 @@ class LikeViewController: UIViewController {
         mainView.collectionView.delegate = self
         mainView.collectionView.dataSource = self
         
-        
         mainView.searchBar.searchTextField.addTarget(self, action: #selector(searchButtonTapped), for: .editingDidEndOnExit)
-        
-        data = realmRepository.read()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        mainView.collectionView.reloadData()
+        super.viewWillAppear(animated)
+        data = realmRepository.read()
     }
     
     @objc func searchButtonTapped() {
@@ -53,8 +55,8 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let data else { return UICollectionViewCell() }
-        
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath) as? CollectionViewCell else {
+
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.identifier, for: indexPath) as? CollectionViewCell else {
             return UICollectionViewCell()
         }
         
@@ -69,24 +71,18 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         guard let data else { return }
         
         let vc = WebViewController()
-        vc.data = data[indexPath.item]
+        let tempData = data[indexPath.item]
+        vc.data = Item(productId: tempData.productId, title: tempData.title, image: tempData.imageURL, mallName: tempData.mallName, lprice: tempData.price)
         navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc private func likeButtonTapped(sender: UIButton) {
         guard let data else { return }
-        
-        let filterData = realmRepository.read().filter { $0.productId == data[sender.tag].productId }
-        
-        if !filterData.isEmpty {
-            realmRepository.delete(data: filterData[0])
-            mainView.collectionView.reloadData()
-            return
-        }
-
-        sender.setImage(UIImage(systemName: "heart"), for: .normal)
+        guard let filterData = realmRepository.read().filter { $0.productId == data[sender.tag].productId }.first else { return }
+        realmRepository.delete(data: filterData)
+        self.data = realmRepository.read()
     }
-    
+
     func numberFormatter(number: Int) -> String {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
@@ -99,7 +95,6 @@ extension LikeViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         data = realmRepository.read().filter { $0.title.contains(searchText) }
-        mainView.collectionView.reloadData()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {

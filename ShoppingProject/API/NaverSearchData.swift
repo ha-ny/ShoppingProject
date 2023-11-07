@@ -14,11 +14,10 @@ struct NaverSearchData: Codable {
 
 struct Item: Codable {
     let productId, title: String
-    let link: String
     let image, mallName: String
     let lprice: String
 
     enum CodingKeys: String, CodingKey {
-        case productId, title, link, image, lprice, mallName
+        case productId, title, image, lprice, mallName
     }
 }

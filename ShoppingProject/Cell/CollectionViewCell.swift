@@ -11,6 +11,8 @@ import Kingfisher
 
 class CollectionViewCell: UICollectionViewCell {
     
+    static let identifier = "CollectionViewCell"
+    
     let realmRepository = RealmRepository()
     var data: LikeTable?
     
@@ -94,8 +96,8 @@ class CollectionViewCell: UICollectionViewCell {
     
     func cellSetting() {
         setting()
-        guard let data else { return }
-        
+        guard let data, !data.isInvalidated else { return }
+
         imageView.kf.setImage(with: URL(string: data.imageURL))
         mallNameLabel.text = "[\(data.mallName)]"
         let title = data.title.replacingOccurrences(of: "[<b></b>]", with: "", options: .regularExpression)
@@ -112,8 +114,8 @@ class CollectionViewCell: UICollectionViewCell {
     }
     
     override func prepareForReuse() {
-        guard let data else { return }
-        
+        guard let data, !data.isInvalidated else { return }
+    
         let filterData = realmRepository.read().filter { $0.productId == data.productId }
         let imageStr = filterData.isEmpty ? "heart.fill" : "heart"
         likeButton.setImage(UIImage(systemName: imageStr), for: .normal)

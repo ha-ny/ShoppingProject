@@ -107,7 +107,9 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
             return UICollectionViewCell()
         }
         
-        cell.data = LikeTable(value: searchDataList.items[indexPath.item])
+        let data = searchDataList.items[indexPath.item]
+        let tableType = LikeTable(productId: data.productId, imageURL: data.image, mallName: data.mallName, title: data.title, price: data.lprice)
+        cell.data = tableType
         cell.cellSetting()
         cell.likeButton.tag = indexPath.item
         cell.likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
@@ -116,19 +118,21 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = WebViewController()
-        vc.data = LikeTable(value: searchDataList.items[indexPath.item]) 
+        let data = searchDataList.items[indexPath.item]
+        vc.data = searchDataList.items[indexPath.item]
         navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc private func likeButtonTapped(sender: UIButton) {
-        let data = realmRepository.read().filter { $0.productId == searchDataList.items[sender.tag].productId }
-        
-        if data.isEmpty {
-            realmRepository.create(data: data[0])
+        let data = searchDataList.items[sender.tag]
+        let filterData = realmRepository.read().filter { $0.productId == data.productId }
+        if filterData.isEmpty {
+            let tableType = LikeTable(productId: data.productId, imageURL: data.image, mallName: data.mallName, title: data.title, price: data.lprice)
+            realmRepository.create(data: tableType)
             sender.setImage(UIImage(systemName: "heart.fill"), for: .normal)
         } else {
             //기존에 있는 productId -> 이미 좋아요 눌린 상태 -> 좋아요 해지
-            realmRepository.delete(data: data[0])
+            realmRepository.delete(data: filterData[0])
             sender.setImage(UIImage(systemName: "heart"), for: .normal)
         }
     }

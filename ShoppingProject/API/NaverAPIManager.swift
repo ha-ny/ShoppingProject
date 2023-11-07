@@ -24,7 +24,6 @@ class NaverAPIManager{
             case .success(let value):
                 completion(value)
             case .failure(let error):
-                print(error)
                 completion(nil)
             }
         }
@@ -40,7 +39,6 @@ class NaverAPIManager{
             case .success(let value):
                 completion(value)
             case .failure(let error):
-                print(error)
                 completion(nil)
             }
         }

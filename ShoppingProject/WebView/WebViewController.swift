@@ -11,7 +11,7 @@ import WebKit
 class WebViewController: UIViewController{
 
     let realmRepository = RealmRepository()
-    var data: LikeTable?
+    var data: Item?
     let webView = WKWebView()
     
     override func viewDidLoad() {
@@ -27,13 +27,12 @@ class WebViewController: UIViewController{
         
         let filterData = realmRepository.read().filter { $0.productId == data.productId }
         
-        let image = filterData.isEmpty ? "heart.fill" : "heart"
+        let image = filterData.isEmpty ? "heart" : "heart.fill"
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: image), style: .plain, target: self, action: #selector(likeButtonTapped))
         navigationItem.rightBarButtonItem?.tintColor = .white
-        
        
         webView.load(request)
-        
+
         setConfiguration()
         setConstraints()
     }
@@ -50,14 +49,16 @@ class WebViewController: UIViewController{
     
     @objc func likeButtonTapped() {
         guard let data else { return }
+
         let filterData = realmRepository.read().filter { $0.productId == data.productId }
-        
+
         if filterData.isEmpty{
             navigationItem.rightBarButtonItem?.image = UIImage(systemName: "heart.fill")
-            realmRepository.create(data: data)
+            let temp = LikeTable(productId: data.productId, imageURL: data.image, mallName: data.mallName, title: data.title, price: data.lprice)
+            realmRepository.create(data: temp)
         } else {
             navigationItem.rightBarButtonItem?.image = UIImage(systemName: "heart")
-            realmRepository.delete(data: data)
+            realmRepository.delete(data: filterData[0])
         }
     }
     

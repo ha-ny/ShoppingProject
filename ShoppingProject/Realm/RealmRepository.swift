@@ -10,7 +10,7 @@ import RealmSwift
 
 class RealmRepository {
     
-    private let realm = try? Realm()
+    let realm = try? Realm()
     
     func read() -> [LikeTable] {
         guard let realm else { return [] }
@@ -22,8 +22,7 @@ class RealmRepository {
         
         do {
             try realm.write {
-                data.title = data.title.replacingOccurrences(of: "[<b></b>]", with: "", options: .regularExpression)
-                realm.add(data)
+                realm.add(data, update: .modified)
             }
         } catch { }
     }

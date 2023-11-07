@@ -19,7 +19,7 @@ class LikeView: BaseView {
 
     lazy var collectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
-        view.register(CollectionViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
+        view.register(CollectionViewCell.self, forCellWithReuseIdentifier: CollectionViewCell.identifier)
         view.collectionViewLayout = collectionViewLayout()
         return view
     }()
