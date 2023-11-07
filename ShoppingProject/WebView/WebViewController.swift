@@ -7,53 +7,32 @@
 
 import UIKit
 import WebKit
-import RealmSwift
 
 class WebViewController: UIViewController{
 
-    let repository = RealmRepository()
-    
-    var itemData: Item?
-    var tableData: LikeTable?
-    var heartBool = false
-    var isLikeView = false
-    
+    let realmRepository = RealmRepository()
+    var data: LikeTable?
     let webView = WKWebView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        //초기 heartBool = true -> likeView
-        if heartBool{
-            isLikeView = true
-        }
+        guard let data else { return }
         
-        if isLikeView {
-            guard let data = tableData else { return }
-            
-            let title = data.title.replacingOccurrences(of: "[<b></b>]", with: "", options: .regularExpression)
-            self.title = title
-            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "heart.fill"), style: .plain, target: self, action: #selector(likeButtonTapped))
-            navigationItem.rightBarButtonItem?.tintColor = .white
-            
-            let url = URL(string: "https://msearch.shopping.naver.com/product/\(data.productId)")
-            let request = URLRequest(url: url!)
-            webView.load(request)
-            
-        }else {
-            guard let data = itemData else { return }
-            let title = data.title.replacingOccurrences(of: "[<b></b>]", with: "", options: .regularExpression)
-            self.title = title
-            
-            heartBool = repository.isLikeState(data: data)
-            let image = heartBool ? "heart.fill" : "heart"
-            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: image), style: .plain, target: self, action: #selector(likeButtonTapped))
-            navigationItem.rightBarButtonItem?.tintColor = .white
-            
-            let url = URL(string: "https://msearch.shopping.naver.com/product/\(data.productId)")
-            let request = URLRequest(url: url!)
-            webView.load(request)
-        }
+        let title = data.title.replacingOccurrences(of: "[<b></b>]", with: "", options: .regularExpression)
+        self.title = title
+
+        let url = URL(string: "https://msearch.shopping.naver.com/product/\(data.productId)")
+        let request = URLRequest(url: url!)
+        
+        let filterData = realmRepository.read().filter { $0.productId == data.productId }
+        
+        let image = filterData.isEmpty ? "heart.fill" : "heart"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: image), style: .plain, target: self, action: #selector(likeButtonTapped))
+        navigationItem.rightBarButtonItem?.tintColor = .white
+        
+       
+        webView.load(request)
         
         setConfiguration()
         setConstraints()
@@ -70,22 +49,15 @@ class WebViewController: UIViewController{
     }
     
     @objc func likeButtonTapped() {
-        if isLikeView {
-            guard let data = tableData else { return }
-            if let table = repository.isResultsConvert(table: data){
-                repository.likeTableDelete(data: table)
-            }
+        guard let data else { return }
+        let filterData = realmRepository.read().filter { $0.productId == data.productId }
+        
+        if filterData.isEmpty{
+            navigationItem.rightBarButtonItem?.image = UIImage(systemName: "heart.fill")
+            realmRepository.create(data: data)
+        } else {
             navigationItem.rightBarButtonItem?.image = UIImage(systemName: "heart")
-            heartBool.toggle()
-            navigationItem.rightBarButtonItem?.tintColor = .white
-        }else {
-            guard let data = itemData else { return }
-            
-            heartBool = repository.isLikeState(data: data, tableEdit: true)
-            let image = heartBool ? "heart.fill" : "heart"
-            navigationItem.rightBarButtonItem?.image = UIImage(systemName: image)
-            heartBool.toggle()
-
+            realmRepository.delete(data: data)
         }
     }
     

@@ -11,9 +11,8 @@ import Kingfisher
 
 class CollectionViewCell: UICollectionViewCell {
     
-    let repository = RealmRepository()
-    var itemData: Item?
-    var tableData: LikeTable?
+    let realmRepository = RealmRepository()
+    var data: LikeTable?
     
     let imageView = {
         let view = UIImageView()
@@ -51,7 +50,7 @@ class CollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    func cellSetting() {
+    func setting() {
         configuration()
         setConstraints()
     }
@@ -93,48 +92,30 @@ class CollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func cellSetting(isLikeView: Bool = false) {
+    func cellSetting() {
+        setting()
+        guard let data else { return }
         
-        if isLikeView {
-            guard let data = tableData else { return }
-            
-            imageView.kf.setImage(with: URL(string: data.imageURL))
-            mallNameLabel.text = "[\(data.mallName)]"
-            let title = data.title.replacingOccurrences(of: "[<b></b>]", with: "", options: .regularExpression)
-            titleLabel.text = title
-            priceLabel.text = numberFormatter(number: Int(data.price)!)
-            likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-        }else {
-            guard let data = itemData else { return }
-            
-            imageView.kf.setImage(with: URL(string: data.image))
-            mallNameLabel.text = "[\(data.mallName)]"
-            let title = data.title.replacingOccurrences(of: "[<b></b>]", with: "", options: .regularExpression)
-            titleLabel.text = title
-            priceLabel.text = numberFormatter(number: Int(data.lprice)!)
-            
-            if repository.isLikeState(data: data) {
-                likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-            } else{
-                likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
-            }
-        }
-    }
-    
-    func numberFormatter(number: Int) -> String {
+        imageView.kf.setImage(with: URL(string: data.imageURL))
+        mallNameLabel.text = "[\(data.mallName)]"
+        let title = data.title.replacingOccurrences(of: "[<b></b>]", with: "", options: .regularExpression)
+        titleLabel.text = title
+        
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
-    
-        return numberFormatter.string(from: NSNumber(value: number))!
+        let price = numberFormatter.string(from: NSNumber(value: Int(data.price) ?? 0))
+        priceLabel.text = price
+        
+        let filterData = realmRepository.read().filter { $0.productId == data.productId }
+        let image = filterData.isEmpty ? "heart" : "heart.fill"
+        likeButton.setImage(UIImage(systemName: image), for: .normal)
     }
     
     override func prepareForReuse() {
-        guard let data = itemData else { return }
-        print(data)
-        if repository.isLikeState(data: data) {
-            likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-        } else{
-            likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
-        }
+        guard let data else { return }
+        
+        let filterData = realmRepository.read().filter { $0.productId == data.productId }
+        let imageStr = filterData.isEmpty ? "heart.fill" : "heart"
+        likeButton.setImage(UIImage(systemName: imageStr), for: .normal)
     }
 }

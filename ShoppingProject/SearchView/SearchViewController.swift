@@ -6,16 +6,18 @@
 //
 
 import UIKit
-import Alamofire
-import RealmSwift
 
 class SearchViewController: UIViewController {
 
     let mainView = SearchView()
     
-    let repository = RealmRepository()
+    let realmRepository = RealmRepository()
     let naverAPIManager = NaverAPIManager.shared
-    var searchDataList: NaverSearchData = NaverSearchData(total: 0, start: 0, display: 0, items: [])
+    var searchDataList: NaverSearchData = NaverSearchData(total: 0, start: 0, display: 0, items: []) {
+        didSet {
+            self.mainView.collectionView.reloadData()
+        }
+    }
     
     var sort: SortType = .sim
     var startItem = 1
@@ -28,7 +30,10 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "검색"
-        
+        settingAction()
+    }
+    
+    func settingAction() {
         mainView.searchBar.delegate = self
         mainView.collectionView.delegate = self
         mainView.collectionView.dataSource = self
@@ -50,15 +55,15 @@ class SearchViewController: UIViewController {
     }
     
     @objc func searchButtonTapped() {
+        guard let searchText = mainView.searchBar.text else { return }
         
-        if mainView.searchBar.text?.isEmpty ?? true {
+        if searchText.isEmpty {
             searchDataList.items.removeAll()
-            mainView.collectionView.reloadData()
             mainView.emptyLabel.isHidden = false
         }else {
+            view.endEditing(true)
             mainView.emptyLabel.isHidden = true
             mainView.searchBar.showsCancelButton = false
-            view.endEditing(true)
             
             startItem = 1
             scrollToTop()
@@ -67,7 +72,6 @@ class SearchViewController: UIViewController {
                 guard let value else { return }
                 self.searchDataList.items.removeAll()
                 self.searchDataList.items += value.items
-                self.mainView.collectionView.reloadData()
             }
         }
     }
@@ -79,38 +83,16 @@ class SearchViewController: UIViewController {
     }
     
     @objc func sortChange(_ sender: UIButton) {
-        
-        //버튼 색상 변경(이전에 클릭한 것)
-        switch sort {
-        case .sim: buttonColorChange(button: mainView.byAccuracyButton, click: false)
-        case .date: buttonColorChange(button: mainView.byDateButton, click: false)
-        case .dsc: buttonColorChange(button: mainView.byHighPriceButton, click: false)
-        case .asc: buttonColorChange(button: mainView.byLowPriceButton, click: false)
-        }
-        
-        //버튼 색상 변경(이번에 클릭한 것)
-        switch SortType(rawValue: sender.tag) {
-        case .sim: sort = .sim; buttonColorChange(button: mainView.byAccuracyButton, click: true)
-        case .date: sort = .date; buttonColorChange(button: mainView.byDateButton, click: true)
-        case .dsc: sort = .dsc; buttonColorChange(button: mainView.byHighPriceButton, click: true)
-        case .asc: sort = .asc; buttonColorChange(button: mainView.byLowPriceButton, click: true)
-        case .none:
-            sort = .sim; buttonColorChange(button: mainView.byAccuracyButton, click: true)
-        }
-        
+
+        [mainView.byAccuracyButton, mainView.byDateButton, mainView.byHighPriceButton, mainView.byLowPriceButton].forEach {
+                $0.setTitleColor(.gray, for: .normal)
+                $0.backgroundColor = .black
+           }
+           
+        sort = SortType(rawValue: sender.tag) ?? .sim
+        sender.setTitleColor(.black, for: .normal)
+        sender.backgroundColor = .white
         searchButtonTapped()
-    }
-    
-    //click - true: 새로 클릭한 버튼 /false: 이전에 클릭한 것 Unclick한 것처럼 바꿔줘야함
-    func buttonColorChange(button: UIButton, click: Bool) {
-        
-        if click {
-            button.setTitleColor(.black, for: .normal)
-            button.backgroundColor = .white
-        }else {
-            button.setTitleColor(.gray, for: .normal)
-            button.backgroundColor = .black
-        }
     }
 }
 
@@ -124,7 +106,8 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath) as? CollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.itemData = searchDataList.items[indexPath.item]
+        
+        cell.data = LikeTable(value: searchDataList.items[indexPath.item])
         cell.cellSetting()
         cell.likeButton.tag = indexPath.item
         cell.likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
@@ -133,15 +116,19 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = WebViewController()
-        vc.itemData = searchDataList.items[indexPath.item]
+        vc.data = LikeTable(value: searchDataList.items[indexPath.item]) 
         navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc private func likeButtonTapped(sender: UIButton) {
-
-        if repository.isLikeState(data: searchDataList.items[sender.tag], tableEdit: true) {
+        let data = realmRepository.read().filter { $0.productId == searchDataList.items[sender.tag].productId }
+        
+        if data.isEmpty {
+            realmRepository.create(data: data[0])
             sender.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-        } else{
+        } else {
+            //기존에 있는 productId -> 이미 좋아요 눌린 상태 -> 좋아요 해지
+            realmRepository.delete(data: data[0])
             sender.setImage(UIImage(systemName: "heart"), for: .normal)
         }
     }
@@ -158,7 +145,6 @@ extension SearchViewController: UICollectionViewDataSourcePrefetching {
                     guard let self, let value else { return }
 
                     searchDataList.items += value.items
-                    mainView.collectionView.reloadData()
                 }
             }
         }
@@ -171,7 +157,6 @@ extension SearchViewController: UISearchBarDelegate {
         searchBar.text = nil
         searchBar.showsCancelButton = false
         searchDataList.items.removeAll()
-        mainView.collectionView.reloadData()
         mainView.emptyLabel.isHidden = false
         view.endEditing(true)
     }

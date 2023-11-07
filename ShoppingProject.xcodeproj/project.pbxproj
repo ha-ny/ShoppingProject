@@ -96,7 +96,7 @@
 				3F8577EA2AF9D49D004B988E /* SearchView */,
 				3F8577ED2AF9D6EB004B988E /* WebView */,
 				3F8577EE2AF9D6F4004B988E /* LikeView */,
-				3F06069E2AAF2D6C00EF8C02 /* Data */,
+				3F06069E2AAF2D6C00EF8C02 /* Realm */,
 				3F8577E82AF9D36D004B988E /* Delegate */,
 				3F0606372AAADD1700EF8C02 /* LaunchScreen.storyboard */,
 				3F0606352AAADD1700EF8C02 /* Assets.xcassets */,
@@ -116,6 +116,7 @@
 		3F06065B2AAC07EF00EF8C02 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				3F06065C2AAC0DF200EF8C02 /* NaverSearchData.swift */,
 				3F06069C2AAEC69E00EF8C02 /* NaverAPIManager.swift */,
 				3F0606532AAAFA1C00EF8C02 /* APIKey.swift */,
 				3F06064F2AAAF9CD00EF8C02 /* .gitignore */,
@@ -123,14 +124,13 @@
 			path = API;
 			sourceTree = "<group>";
 		};
-		3F06069E2AAF2D6C00EF8C02 /* Data */ = {
+		3F06069E2AAF2D6C00EF8C02 /* Realm */ = {
 			isa = PBXGroup;
 			children = (
-				3F06065C2AAC0DF200EF8C02 /* NaverSearchData.swift */,
-				3F0606932AAEA8A600EF8C02 /* RealmRepository.swift */,
 				3F0606672AAD968A00EF8C02 /* LikeTable.swift */,
+				3F0606932AAEA8A600EF8C02 /* RealmRepository.swift */,
 			);
-			path = Data;
+			path = Realm;
 			sourceTree = "<group>";
 		};
 		3F8577E82AF9D36D004B988E /* Delegate */ = {
