@@ -13,7 +13,6 @@ Naver Shopping API를 활용한 검색 기능, 사용자 즐겨찾기가 가능�
 ### **개발**
 기간: 2023.09.08 ~ 2023.09.11<br>
 최소 지원 버전: iOS 13<br>
-<br>
 
 ### **기술**
 **DB :** `Realm`<br>
@@ -26,8 +25,7 @@ Naver Shopping API를 활용한 검색 기능, 사용자 즐겨찾기가 가능�
 - 재사용 `CollectionViewCell` 을 통한 중복 코드 최소화
 - `WebKit` 을 통한 앱 내 상품 구매
 - 네트워크 트래픽 최적화: `Kingfisher` 를 통한 이미지 비동기 다운로드 및 캐싱
-- 보안: API Key 보호를 위한 `gitIgnore` 파일 관리
-<br>
+- 보안: API Key 보호를 위한 `gitIgnore` 파일 관리<br>
 
 ### **트러블 슈팅**
 **1. 네트워크 오류 및 에러 처리**
