@@ -21,7 +21,7 @@ Naver Shopping API를 활용한 검색 기능, 사용자 즐겨 찾기가 가능
 **Etc :** `Alamofire` `Codable` `prefetchDataSource` `Kingfisher`<br>
 
 ### **기능 구현**
--`Alamofire` 를 통해 네트워크 요청 전달. `Codable` 프로토콜을 활용한 API 응답 데이터 디코딩
+- `Alamofire` 를 통해 네트워크 요청 전달. `Codable` 프로토콜을 활용한 API 응답 데이터 디코딩
 - Pagination : `prefetchDataSource` 를 통한 부드러운 스크롤 및 데이터 로딩 제공
 - 재사용 `CollectionViewCell` 을 통한 중복 코드 최소화
 - `WebKit` 을 통한 앱 내 상품 구매
